@@ -58,7 +58,7 @@ class ExtremeAspectCropTestCase(BaseImagingTestCase):
         return Context(server, cfg, importer)
 
     @gen_test
-    async def test_800x20_transparent_square_is_not_blank(self):
+    async def test_800x20_rainbow_source_is_not_blank(self):
         response = await self.async_fetch("/unsafe/800x20/rainbow.png")
         assert response.code == 200
         image = Image.open(BytesIO(response.body)).convert("RGBA")
