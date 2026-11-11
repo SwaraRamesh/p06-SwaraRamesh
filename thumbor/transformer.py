@@ -298,6 +298,9 @@ class Transformer:
             )
             crop_height = source_height
 
+        crop_width = max(1, crop_width)
+        crop_height = max(1, crop_height)
+
         crop_left = int(
             round(
                 min(
@@ -387,8 +390,10 @@ class Transformer:
             return
 
         # add 1e-5 to get .5 rounding up in Python3 as it was in Python2
+        # a height of 0 means no height limit, so fit by width only
         if (
-            source_width / self.target_width * sign
+            not self.target_height
+            or source_width / self.target_width * sign
             >= source_height / self.target_height * sign
         ):
             resize_height = round(
@@ -400,6 +405,10 @@ class Transformer:
             resize_width = round(
                 source_width * self.target_height / source_height + 1e-5
             )
+
+        # never resize to a zero-sized image
+        resize_height = max(resize_height, 1)
+        resize_width = max(resize_width, 1)
 
         # ensure that filter should work on the real image size
         # and not on the request size which might be smaller than the
